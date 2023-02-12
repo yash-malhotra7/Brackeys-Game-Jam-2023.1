@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     public float jumpTime;
     public float checkRadius;
     public float j = 0.1f;
+    public bool isPlayerFacingRight = true;
     public LayerMask whatIsGround;
     public Transform BottomPos;
 
@@ -36,10 +37,12 @@ public class PlayerController : MonoBehaviour
         if (moveInput > 0)
         {
             transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            isPlayerFacingRight = true;
         }
         else if (moveInput < 0)
         {
             transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            isPlayerFacingRight = false;
         }
 
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
