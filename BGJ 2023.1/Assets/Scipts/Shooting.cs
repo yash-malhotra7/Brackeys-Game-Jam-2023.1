@@ -1,21 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Shooting : MonoBehaviour
 {
     PlayerController playerController;
+    Instances inst;
 
-    public GameObject arrowPrefab;
-    public float arrowSpeed = 10.0f;
-    public Transform arrowSpawnPoint;
-    public float timeBetweenShots = 1.0f;
+    private GameObject arrowPrefab;
+    private float arrowSpeed = 10.0f;
+    private Transform arrowSpawnPoint;
+    private float timeBetweenShots = 1.0f;
 
     private float timeSinceLastShot = 0.0f;
+
+    private void Awake()
+    {
+        inst = GetComponent<Instances>();
+    }
 
     private void Start()
     {
         playerController = GetComponent<PlayerController>();
+        arrowPrefab = inst.arrowPrefab;
+        arrowSpeed = inst.arrowSpeed;
+        arrowSpawnPoint = inst.arrowSpawnPoint;
+        timeBetweenShots = inst.timeBetweenShots;
     }
 
     void Update()

@@ -2,16 +2,19 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    Instances inst;
 
-    public float moveSpeed = 5f;
-    public float jumpForce = 10f;
-    public float jumpTime;
-    public float checkRadius;
-    public float j = 0.1f;
+    private GameObject GhostPrefab;
+
+    private float moveSpeed = 5f;
+    private float jumpForce = 10f;
+    private float jumpTime;
+    private float checkRadius;
+    private float jumpVelocityReductionRate = 0.1f;
+    private float ghostSpawnTime = 1f;
     public bool isPlayerFacingRight = true;
-    public LayerMask whatIsGround;
-    public Transform BottomPos;
-
+    private LayerMask whatIsGround;
+    private Transform BottomPos;
     private Rigidbody2D rb;
     private float moveInput;
     private float jumpTimeCounter;
@@ -19,9 +22,26 @@ public class PlayerController : MonoBehaviour
     private bool isJumping = false;
     private bool isGrounded;
 
+    private void Awake()
+    {
+        inst = GetComponent<Instances>();
+    }
+
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        GhostPrefab = inst.GhostPrefab;
+
+        moveSpeed = 5f;
+        jumpForce = 10f;
+        jumpTime = inst.jumpTime;
+        checkRadius = inst.checkRadius;
+        jumpVelocityReductionRate = inst.jumpVelocityReductionRate;
+        ghostSpawnTime = inst.ghostSpawnTime;
+        whatIsGround = inst.whatIsGround;
+        BottomPos = inst.BottomPos;
+
+    rb = GetComponent<Rigidbody2D>();
+        
     }
 
     void FixedUpdate()
@@ -50,7 +70,7 @@ public class PlayerController : MonoBehaviour
             
             isJumping = true;
             jumpTimeCounter = jumpTime;
-            k = j;
+            k = jumpVelocityReductionRate;
         }
 
         if (Input.GetKey(KeyCode.Space) && isJumping == true)
@@ -59,7 +79,7 @@ public class PlayerController : MonoBehaviour
             {
                 rb.velocity = Vector2.up * (jumpForce - k);
                 jumpTimeCounter -= Time.deltaTime;
-                k += j;
+                k += jumpVelocityReductionRate;
             }
             else
             {
@@ -73,5 +93,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    
+    public void SpawnTheGhost()
+    {
+        Invoke("SpawnGhost", ghostSpawnTime);
+    }
+
+    void SpawnGhost()
+    {
+        Instantiate(GhostPrefab, transform.position, Quaternion.identity);
+    }
 }
