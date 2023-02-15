@@ -30,7 +30,7 @@ public class Shooting : MonoBehaviour
     {
         timeSinceLastShot += Time.deltaTime;
 
-        if (Input.GetButtonDown("Fire1") && timeSinceLastShot >= timeBetweenShots)
+        if (Input.GetButtonDown("Fire1") && timeSinceLastShot >= timeBetweenShots && playerController.isGrounded)
         {
             ShootArrow();
             timeSinceLastShot = 0.0f;

@@ -39,6 +39,7 @@ public class PatrolEnemy : MonoBehaviour
         if(FindObjectOfType<PlayerController>() == null)
         {
             checkBox.isPlayerDetected = false;
+            GoToNearestPatrolPoint();
         }
         if (isChasingPlayer)
         {

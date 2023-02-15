@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour
     Instances inst;
 
     private GameObject GhostPrefab;
+    private Animator anim;
 
     private float moveSpeed = 5f;
     private float jumpForce = 10f;
@@ -20,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private float jumpTimeCounter;
     private float k;
     private bool isJumping = false;
-    private bool isGrounded;
+    public bool isGrounded;
 
     private void Awake()
     {
@@ -39,6 +40,7 @@ public class PlayerController : MonoBehaviour
         ghostSpawnTime = inst.ghostSpawnTime;
         whatIsGround = inst.whatIsGround;
         BottomPos = inst.BottomPos;
+        anim = inst.anim;
 
     rb = GetComponent<Rigidbody2D>();
         
@@ -46,13 +48,18 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        moveInput = Input.GetAxisRaw("Horizontal");
+        if (!GetComponent<SwordAttack>().isAttacking)
+            moveInput = Input.GetAxisRaw("Horizontal");
+        else
+            moveInput = 0;
         rb.velocity = new Vector2(moveInput * moveSpeed, rb.velocity.y);
     }
 
     void Update()
     {
         isGrounded = Physics2D.OverlapCircle(BottomPos.position, checkRadius, whatIsGround);
+
+        anim.SetFloat("Speed", Mathf.Abs(moveInput));
 
         if (moveInput > 0)
         {
@@ -65,12 +72,19 @@ public class PlayerController : MonoBehaviour
             isPlayerFacingRight = false;
         }
 
-        if (isGrounded && Input.GetKeyDown(KeyCode.Space))
+        if (isGrounded)
         {
-            
-            isJumping = true;
-            jumpTimeCounter = jumpTime;
-            k = jumpVelocityReductionRate;
+            if (!isJumping)
+            {
+                anim.SetBool("IsJumping", false);
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                isJumping = true;
+                jumpTimeCounter = jumpTime;
+                k = jumpVelocityReductionRate;
+                anim.SetBool("IsJumping", true);
+            }
         }
 
         if (Input.GetKey(KeyCode.Space) && isJumping == true)

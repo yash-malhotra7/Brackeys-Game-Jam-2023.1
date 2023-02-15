@@ -6,6 +6,7 @@ public class Instances : MonoBehaviour
 {
     public GameObject GhostPrefab;
     public GameObject arrowPrefab;
+    public Animator anim;
 
     public float moveSpeed = 5f;
     public float jumpForce = 10f;
@@ -19,6 +20,13 @@ public class Instances : MonoBehaviour
     public bool isPlayerFacingRight = true;
     public LayerMask whatIsGround;
     public Transform BottomPos;
+    public Transform ShootPos;
+    public Transform AttackPos;
+
+    private void Awake()
+    {
+        anim = GetComponentInChildren<Animator>();
+    }
 
     private void Update()
     {
